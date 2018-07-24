@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.Nullable;
@@ -38,7 +39,24 @@ public class Practice10MatrixSkewView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        int bitmapWidth = bitmap.getWidth();
+        int bitmapHeight = bitmap.getHeight();
+
+        Matrix matrix = new Matrix();
+
+
+        //这里的skew里面的kx, ky，是旋转角度是tan值，我是这么记的，就是这个角，对应的三角形在View坐标系的投影的坐标值，算出正切
+        canvas.save();
+        matrix.postSkew(0, 0.5f, point1.x + bitmapWidth / 2, point1.y + bitmapHeight / 2);
+        canvas.concat(matrix);
         canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+        canvas.restore();
+
+        canvas.save();
+        matrix.reset();
+        matrix.postSkew(-0.5f, 0 , point2.x + bitmapWidth / 2, point2.y + bitmapHeight / 2);
+        canvas.concat(matrix);
         canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+        canvas.restore();
     }
 }

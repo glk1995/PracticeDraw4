@@ -74,13 +74,28 @@ public class Practice14FlipboardView extends View {
 
         canvas.save();
 
+        canvas.save();
+        canvas.clipRect(x, y, x + bitmapWidth, centerY);
+        canvas.drawBitmap(bitmap, x, y, paint);
+        canvas.restore();
+
         camera.save();
+
+        //Sample代码是写在这里的，Canvas是反着的，所以相当于是根据旋转角度来选择截上半部分还是下半部分
+        //其实需要裁剪的永远是下半部分，只是degree > 90 被旋转到上半部分了
+//        if (degree < 90) {
+//            canvas.clipRect(0, centerY, getWidth(), getHeight());
+//        } else {
+//            canvas.clipRect(0, 0, getWidth(), centerY);
+//        }
+
         camera.rotateX(degree);
         canvas.translate(centerX, centerY);
         camera.applyToCanvas(canvas);
         canvas.translate(-centerX, -centerY);
+        //这里是先裁剪后旋转
+        canvas.clipRect(x, centerY, x + bitmapWidth, y + bitmapHeight);
         camera.restore();
-
         canvas.drawBitmap(bitmap, x, y, paint);
         canvas.restore();
     }
